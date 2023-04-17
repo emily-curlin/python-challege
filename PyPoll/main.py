@@ -4,81 +4,61 @@ from collections import Counter
 
 #define variables
 total_votes=0
-ccs_percent_votes=0
-ccs_total_votes=0
-dg_percent_votes=0
-dg_total_votes=0
-rad_percent_votes=0
-rad_total_votes=0
-candidates_dict= {}
 
+candidate_list= []
+candidate_votes={}
 
+winning_candidate = ""
+winning_count = 0
+winning_percentage = 0
+
+file_to_save = os.path.join("Analysis", "PyPoll.txt")
 csvpath = os.path.join ('Resources', 'election_data.csv')
 with open(csvpath, "r") as csvfile:
     # CSV reader specifies delimiter and variable that holds contents
     csvreader = csv.reader(csvfile, delimiter=',')
-    dictionary= csv.DictReader(csvfile)
-    print(candidates_dict)
     csv_header = next(csvreader)
-    candidates_list=[]
-    total_votes= 0
-    
     #loop through rows
     for row in csvreader:
         #Total number of votes cast 
         total_votes = total_votes + 1
-    
+        #Format results for printing
+        election_results = (
+        f"\nElection Results\n"
+        f"-------------------------\n"
+        f"Total Votes: {total_votes:}\n"
+        f"-------------------------\n")
+        candidate_name= row[2]
+      
         #A list of candidates who received votes
-        if row[2] not in candidates_list:
-            candidates_list.append(row[2])
+        if candidate_name not in candidate_list:
+            candidate_list.append(candidate_name)
+            #track number of votes for each candidate, starting at 0, candidate votes serves as dictionary
+            candidate_votes[candidate_name] = 0
+            #add votes for each candidate by looping through rows
+        candidate_votes[candidate_name] = candidate_votes[candidate_name] + 1
+        #Obtain vote count and percentage
+        for candidate_name in candidate_votes:
+            #pulls candidate/ total votes name out of dictionary (value,key)
+            votes = candidate_votes.get(candidate_name)
+            #calculate vote percentage
+            vote_percentage = (votes) / (total_votes) * 100
+            candidate_results = (f"{candidate_name}: {vote_percentage:.3f}% ({votes:,})\n")
+            print(candidate_results)
+            #txt_file.write(candidate_results)
+            #Identify winning candidate
+            if (votes > winning_count) and (vote_percentage > winning_percentage):
+                winning_count = votes
+                winning_percentage = vote_percentage
+                winning_candidate = candidate_name
+                print(f"-------------------------\n" f"Winner:{winning_candidate}" f"\n-------------------------\n")
     
 
-#Total number of votes each candidate won 
-for key in candidates_list.key():
-    print(key) 
-    
-for value in candidates_list.values():
-    print(value) 
+print(election_results)
+#print(candidate_results)
 
-for key, value in some_dict.items():
-    print(key, value)
-
-'''name = "    
-if name in some_dict:
-    print(f"{name} is in some_dict and has {some_dict['John']} votes.")
-
-if name in some_dict:
-    # This is not the first time someone has voted for name...
-    # Increment their vote count by 1...
-    some_dict[name] = some_dict[name] + 1
-else:
-    # This is the first time soeone has voted for name...
-    # Add name to dict and set initial vote count to 1...
-    some_dict[name] = 1
-
-
-
-
-
-
-
-
-print ("Election Results")
-
-print ("------------------------")
-
-print (f"Total Votes: {total_votes}")
-
-print ("-------------------------")
-
-#print (f"Charles Casper Stockham: {ccs_percent_votes}%  ({ccs_total_votes})")
-#print (f"Diana GeGette: {dg_percent_votes}%  ({dg_total_votes})")
-#print (f"Raymon Anthony Doane: {rad_percent_votes}%  ({rad_total_votes})")
-
-print ("-------------------------")
-
-#print (f"Winner: {most_pop_votes}")
-
-print ("-------------------------")
-
-'''
+#with open(file_to_save, "w") as txt_file:
+                
+#print(election_results)
+#print(candidate_results)
+#print(f"-------------------------\n" f"Winner:{winning_candidate}" f"\n-------------------------\n")
