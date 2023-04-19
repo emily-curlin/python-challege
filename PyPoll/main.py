@@ -44,18 +44,18 @@ with open(csvpath, "r") as csvfile:
             #calculate vote percentage
             vote_percentage = (votes) / (total_votes) * 100
             candidate_results = (f"{candidate_name}: {vote_percentage:.3f}% ({votes:,})\n")
-            print(candidate_results)
+            #print(candidate_results)
             #txt_file.write(candidate_results)
             #Identify winning candidate
             if (votes > winning_count) and (vote_percentage > winning_percentage):
                 winning_count = votes
                 winning_percentage = vote_percentage
                 winning_candidate = candidate_name
-                print(f"-------------------------\n" f"Winner:{winning_candidate}" f"\n-------------------------\n")
-    
 
-print(election_results)
-#print(candidate_results)
+
+print(f"-------------------------\n" f"Winner:{winning_candidate}" f"\n-------------------------\n")
+#print(election_results)
+print(candidate_results)
 
 #with open(file_to_save, "w") as txt_file:
                 
